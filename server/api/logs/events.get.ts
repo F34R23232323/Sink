@@ -6,6 +6,8 @@ function query2sql(query: Query, event: H3Event) {
   const filter = buildAnalyticsFilter(query)
   const { dataset } = useRuntimeConfig(event)
   const limit = Math.max(0, Math.floor(query.limit))
+  const page = Math.max(1, Math.floor(query.page || 1))
+  const offset = (page - 1) * limit
   const analyticsQuery = createAnalyticsQuery(dataset)
   const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
 
@@ -13,6 +15,7 @@ function query2sql(query: Query, event: H3Event) {
     .selectAll()
     .orderBy('timestamp', 'desc')
     .limit(sql.lit(limit))
+    .offset(sql.lit(offset))
 }
 
 interface WAEEvents {
@@ -55,6 +58,9 @@ export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, QuerySchema.parse)
   const sql = query2sql(query, event)
 
-  const logs = await useWAE(event, sql) as { data: WAEEvents[] }
-  return events2logs(logs?.data || [])
+  const logs = await useWAE(event, sql) as { data: WAEEvents[], rows_before_limit_at_least: number }
+  return {
+    data: events2logs(logs?.data || []),
+    total: logs?.rows_before_limit_at_least ?? 0,
+  }
 })
