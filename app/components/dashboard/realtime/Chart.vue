@@ -46,7 +46,10 @@ watch([
     if (controller.signal.aborted || isPaused.value)
       return
     hasData.value = Boolean(result.data?.length)
-    stats.value = result.data?.[0] || { visits: 0, visitors: 0, referers: 0 }
+    const data = result.data?.[0]
+    stats.value = data 
+      ? { visits: +data.visits, visitors: +data.visitors, referers: +data.referers } 
+      : { visits: 0, visitors: 0, referers: 0 }
   }
   catch {
     if (!controller.signal.aborted && !isPaused.value)

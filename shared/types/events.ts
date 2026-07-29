@@ -5,6 +5,8 @@ export interface LogEvent {
   browser?: string
   country?: string
   city?: string
+  ip?: string
+  referer?: string
   latitude?: number
   longitude?: number
   COLO?: string

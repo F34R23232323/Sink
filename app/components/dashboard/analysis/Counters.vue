@@ -34,7 +34,10 @@ watch([() => analysisStore.dateRange, () => analysisStore.filters, retryKey], as
       },
     })
     if (!controller.signal.aborted) {
-      counters.value = result.data?.[0] ?? defaultData
+      const data = result.data?.[0]
+      counters.value = data
+        ? { visits: +data.visits, visitors: +data.visitors, referers: +data.referers }
+        : defaultData
       hasLoaded.value = true
     }
   }

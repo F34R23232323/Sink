@@ -28,6 +28,11 @@ const analysisStore = useDashboardAnalysisStore()
         >
           {{ $t('dashboard.weekly_trend') }}
         </TabsTrigger>
+        <TabsTrigger
+          value="logs"
+        >
+          {{ $t('dashboard.logs.title', 'Request Logs') }}
+        </TabsTrigger>
       </TabsList>
 
       <Select v-if="analysisStore.viewMode === 'heatmap'" v-model="analysisStore.heatmapMetric">
@@ -52,6 +57,9 @@ const analysisStore = useDashboardAnalysisStore()
     </TabsContent>
     <TabsContent value="heatmap">
       <DashboardAnalysisHeatmap v-if="analysisStore.viewMode === 'heatmap'" :metric="analysisStore.heatmapMetric" />
+    </TabsContent>
+    <TabsContent value="logs">
+      <DashboardAnalysisLogs v-if="analysisStore.viewMode === 'logs'" />
     </TabsContent>
   </Tabs>
   <DashboardAnalysisMetrics />

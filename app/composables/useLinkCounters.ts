@@ -47,9 +47,9 @@ export function useLinkCounters() {
         if (requestVersions.get(item.id) !== version)
           continue
         countersMap.value[item.id] = {
-          visits: item.visits,
-          visitors: item.visitors,
-          referers: item.referers,
+          visits: +item.visits,
+          visitors: +item.visitors,
+          referers: +item.referers,
         }
       }
     }
