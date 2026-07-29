@@ -25,7 +25,7 @@ export const REALTIME_WINDOWS = [
 
 export const LINK_SORTS = ['newest', 'oldest', 'az', 'za'] as const
 export const LINK_STATUSES = ['active', 'expired'] as const
-export const ANALYSIS_VIEWS = ['trend', 'heatmap'] as const
+export const ANALYSIS_VIEWS = ['trend', 'heatmap', 'logs'] as const
 export const HEATMAP_METRICS = ['visits', 'visitors'] as const
 
 export type AnalysisDatePreset = typeof ANALYSIS_DATE_PRESETS[number]
