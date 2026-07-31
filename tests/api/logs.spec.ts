@@ -7,9 +7,10 @@ describe('/api/logs/events', () => {
 
     expect(response.status).toBe(200)
 
-    const data = await response.json()
-    expect(data).toBeInstanceOf(Array)
-    expect(data.length).toBeLessThanOrEqual(10)
+    const data = await response.json() as { data: unknown[] }
+    expect(data).toHaveProperty('data')
+    expect(data.data).toBeInstanceOf(Array)
+    expect(data.data.length).toBeLessThanOrEqual(10)
   })
 
   it('returns events with time filter', async () => {
@@ -17,14 +18,18 @@ describe('/api/logs/events', () => {
     const response = await fetchWithAuth(`/api/logs/events?slug=1&startAt=${now - 86400}&endAt=${now}&limit=10`)
 
     expect(response.status).toBe(200)
-    expect(await response.json()).toBeInstanceOf(Array)
+    const data = await response.json() as { data: unknown[] }
+    expect(data).toHaveProperty('data')
+    expect(data.data).toBeInstanceOf(Array)
   })
 
   it('returns data without slug filter', async () => {
     const response = await fetchWithAuth('/api/logs/events?limit=10')
 
     expect(response.status).toBe(200)
-    expect(await response.json()).toBeInstanceOf(Array)
+    const data = await response.json() as { data: unknown[] }
+    expect(data).toHaveProperty('data')
+    expect(data.data).toBeInstanceOf(Array)
   })
 
   it.each(['0', '9007199254740991'])('rejects invalid limit %s', async (limit) => {

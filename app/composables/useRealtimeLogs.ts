@@ -43,10 +43,13 @@ export function useRealtimeLogs(options: UseRealtimeLogsOptions = {}) {
   }
   const isPaused = options.isPaused ?? inject(REALTIME_PAUSED_KEY, shallowRef(false))
   const visibility = options.visibility ?? useDocumentVisibility()
-  const loadEvents = options.loadEvents ?? (request => useAPI<LogEvent[]>('/api/logs/events', {
-    signal: request.signal,
-    query: request.query,
-  }))
+  const loadEvents = options.loadEvents ?? (async (request) => {
+    const response = await useAPI<{ data: LogEvent[], total: number } | LogEvent[]>('/api/logs/events', {
+      signal: request.signal,
+      query: request.query,
+    })
+    return Array.isArray(response) ? response : (response?.data ?? [])
+  })
   const replayEvent = options.replayEvent ?? useTrafficEventBus().emit
 
   const logs = shallowRef<LogEvent[]>([])
